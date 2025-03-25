@@ -1,18 +1,23 @@
 require("dotenv").config();
 
-const http = require("http");
+const { error } = require("node:console");
+const readline = require("node:readline");
 
-const server = http.createServer((req, res) => {
-  if (req.url.startsWith("/tasks")) {
-    res.end("Hello World");
-  } else {
-    res.writeHead(404, { "Content-Type": "text/plain" });
-    res.end("Not Found");
-  }
-});
+//console.log(readline);
 
-const PORT = process.env.PORT || 3000;
+//console.log(readline);
 
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const fetchData = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(`resolved`);
+    }, 2000);
+    // setTimeout(() => {
+    //   reject(`rejected`);
+    // }, 2000);
+  });
+};
+
+fetchData()
+  .then((message) => console.log(`${message} resolved`))
+  .catch((error) => console.log(`${error} rejected`));
