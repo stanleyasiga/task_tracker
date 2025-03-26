@@ -1,23 +1,21 @@
-require("dotenv").config();
+#!/usr/bin/env node
 
-const { error } = require("node:console");
 const readline = require("node:readline");
 
-//console.log(readline);
+const args = process.argv.slice(2);
 
-//console.log(readline);
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
-const fetchData = () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve(`resolved`);
-    }, 2000);
-    // setTimeout(() => {
-    //   reject(`rejected`);
-    // }, 2000);
-  });
-};
+if (args.length === 0) {
+  console.log("Usage: mycli <your_name>");
+} else {
+  console.log(`Hello, ${args[0]}!`);
+}
 
-fetchData()
-  .then((message) => console.log(`${message} resolved`))
-  .catch((error) => console.log(`${error} rejected`));
+rl.question("What is your name? ", (name) => {
+  console.log(`Hello ${name}`);
+  rl.close();
+});
