@@ -66,6 +66,34 @@ if (args.length === 0) {
       }
     }
   });
+} else if (args[0] === "mark-in-progress") {
+  const task_id = args[1];
+  fs.readFile("task-cli.json", "utf-8", (err, data) => {
+    if (!err && data) {
+      try {
+        jsonArray = JSON.parse(data);
+
+        if (!Array.isArray(jsonArray)) return (jsonArray = []);
+      } catch {
+        console.error("Invalid JSON file:", parseErr);
+        return;
+      }
+    }
+  });
+} else if (args[0] === "mark-done") {
+  const task_id = args[1];
+
+  fs.readFile("task-cli.json", "utf-8", (err, data) => {
+    if (!err && data) {
+      try {
+        jsonArray = JSON.parse(data);
+        if (!Array.isArray(jsonArray)) return (jsonArray = []);
+      } catch {
+        console.error("Invalid JSON file:", parseErr);
+        return;
+      }
+    }
+  });
 } else {
   console.log(`Hello, ${args[0]}!`);
 }
