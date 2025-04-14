@@ -9,13 +9,12 @@ const fs = require("fs");
 //   input: process.stdin,
 //   output: process.stdout,
 // });
-let count = 0;
 
 if (args.length === 0) {
   console.log("Usage: task-cli <your_name>");
 } else if (args[0] === "add") {
-  let description = args[1];
-  let task = {
+  const description = args[1];
+  const task = {
     id: Date.now(),
     description,
     status: "todo",
@@ -49,6 +48,23 @@ if (args.length === 0) {
         console.log(`Task added successfully (ID:${Date.now()})`);
       }
     );
+  });
+} else if (args[0] === "list") {
+  const status = args[1];
+  fs.readFile("task-cli.json", "utf-8", (err, data) => {
+    if (!err && data) {
+      try {
+        jsonArray = JSON.parse(data);
+        const jsonArrayFiltered = jsonArray?.filter(
+          (item) => item.status === status
+        );
+        if (!Array.isArray(jsonArray)) return (jsonArray = []);
+        console.log(jsonArrayFiltered);
+      } catch {
+        console.error("Invalid JSON file:", parseErr);
+        return;
+      }
+    }
   });
 } else {
   console.log(`Hello, ${args[0]}!`);
