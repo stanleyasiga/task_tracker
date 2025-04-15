@@ -1,14 +1,7 @@
 #!/usr/bin/env node
 
-// const readline = require("node:readline");
-
 const args = process.argv.slice(2);
 const fs = require("fs");
-
-// const rl = readline.createInterface({
-//   input: process.stdin,
-//   output: process.stdout,
-// });
 
 if (args.length === 0) {
   console.log("Usage: task-cli <your_name>");
@@ -46,6 +39,75 @@ if (args.length === 0) {
           return;
         }
         console.log(`Task added successfully (ID:${Date.now()})`);
+      }
+    );
+  });
+} else if (args[0] === "update") {
+  const task_id = args[1];
+  const description = args[2];
+
+  fs.readFile("task-cli.json", "utf-8", (err, data) => {
+    let jsonArray = [];
+    if (!err && data) {
+      try {
+        jsonArray = JSON.parse(data);
+
+        if (!Array.isArray(jsonArray)) return (jsonArray = []);
+      } catch {
+        console.error("Invalid JSON file:", parseErr);
+        return;
+      }
+    }
+    const jsonArrayUpdated = jsonArray?.map((item) =>
+      item?.id == task_id
+        ? {
+            ...item,
+            description: description,
+          }
+        : item
+    );
+    fs.writeFile(
+      "task-cli.json",
+      JSON.stringify(jsonArrayUpdated, null, 2),
+      "utf8",
+      (writeErr) => {
+        if (writeErr) {
+          console.error("Error writing to file:", writeErr);
+          return;
+        }
+        console.log(`Task updated successfully (ID:${Date.now()})`);
+      }
+    );
+  });
+} else if (args[0] === "delete") {
+  const task_id = args[1];
+
+  fs.readFile("task-cli.json", "utf-8", (err, data) => {
+    let jsonArray = [];
+    if (!err && data) {
+      try {
+        jsonArray = JSON.parse(data);
+
+        if (!Array.isArray(jsonArray)) return (jsonArray = []);
+      } catch {
+        console.error("Invalid JSON file:", parseErr);
+        return;
+      }
+    }
+    const jsonArrayUpdated = jsonArray?.filter((item) => item?.id != task_id);
+
+    console.log(jsonArrayUpdated);
+
+    fs.writeFile(
+      "task-cli.json",
+      JSON.stringify(jsonArrayUpdated, null, 2),
+      "utf8",
+      (writeErr) => {
+        if (writeErr) {
+          console.error("Error writing to file:", writeErr);
+          return;
+        }
+        console.log(`Task deleted successfully (ID:${Date.now()})`);
       }
     );
   });

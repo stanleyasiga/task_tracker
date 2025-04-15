@@ -14,15 +14,8 @@
     "updatedAt": "2025-04-14T19:29:02.175Z"
   },
   {
-    "id": 1744660132753,
-    "description": "More groceries",
-    "status": "done",
-    "createdAt": "2025-04-14T19:48:52.753Z",
-    "updatedAt": "2025-04-14T19:48:52.753Z"
-  },
-  {
     "id": 1744660263769,
-    "description": "More groceries",
+    "description": "Cakes and Pasteries",
     "status": "todo",
     "createdAt": "2025-04-14T19:51:03.769Z",
     "updatedAt": "2025-04-14T19:51:03.769Z"
