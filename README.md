@@ -4,7 +4,7 @@ This a task tracker built with nodejs.
 
 ## project url
 
-https://github.com/stanleyasiga/task_tracker
+https://roadmap.sh/projects/task-tracker
 
 ## To install the application
 
