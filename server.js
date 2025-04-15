@@ -59,16 +59,21 @@ if (args.length === 0) {
           (item) => item.status === status
         );
         if (!Array.isArray(jsonArray)) return (jsonArray = []);
-        console.log(jsonArrayFiltered);
+        if (status) {
+          console.log(jsonArrayFiltered);
+        } else {
+          console.log(jsonArray);
+        }
       } catch {
         console.error("Invalid JSON file:", parseErr);
         return;
       }
     }
   });
-} else if (args[0] === "mark-in-progress") {
+} else if (["mark-in-progress", "mark-done"]?.includes(args[0])) {
   const task_id = args[1];
   fs.readFile("task-cli.json", "utf-8", (err, data) => {
+    let jsonArray = [];
     if (!err && data) {
       try {
         jsonArray = JSON.parse(data);
@@ -79,20 +84,27 @@ if (args.length === 0) {
         return;
       }
     }
-  });
-} else if (args[0] === "mark-done") {
-  const task_id = args[1];
 
-  fs.readFile("task-cli.json", "utf-8", (err, data) => {
-    if (!err && data) {
-      try {
-        jsonArray = JSON.parse(data);
-        if (!Array.isArray(jsonArray)) return (jsonArray = []);
-      } catch {
-        console.error("Invalid JSON file:", parseErr);
-        return;
+    const jsonArrayUpdated = jsonArray?.map((item) =>
+      item?.id == task_id
+        ? {
+            ...item,
+            status: args[0] == "mark-in-progress" ? "in-progress" : "done",
+          }
+        : item
+    );
+    fs.writeFile(
+      "task-cli.json",
+      JSON.stringify(jsonArrayUpdated, null, 2),
+      "utf8",
+      (writeErr) => {
+        if (writeErr) {
+          console.error("Error writing to file:", writeErr);
+          return;
+        }
+        console.log(`Task updated successfully (ID:${Date.now()})`);
       }
-    }
+    );
   });
 } else {
   console.log(`Hello, ${args[0]}!`);
