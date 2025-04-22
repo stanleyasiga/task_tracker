@@ -1,10 +1,7 @@
 {
-  "name": "task_tracker",
+  "name": "performance_server_stats",
   "version": "1.0.0",
   "main": "server.js",
-  "scripts": {
-    "start": "nodemon server.js"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -16,6 +13,6 @@
     "nodemon": "^3.1.9"
   },
   "bin":{
-    "task-cli": "./server.js"
+    "server-stats": "./server-stats.sh"
   }
 }
