@@ -1,35 +1,47 @@
 #!/usr/bin/env node
 console.log("performance of linux web server");
 
-const os = require('os');
-
-const cpus = os.cpus();
-
-const { exec } = require('child_process');
-
-const used = process.memoryUsage();
-const totalMem = os.totalmem();
-
-cpus.forEach((cpu, i) => {
-  const total = Object.values(cpu.times).reduce((acc, tv) => acc + tv, 0);
-  const usage = ((total - cpu.times.idle) / total) * 100;
-
-  console.log(`Core ${i + 1}: ${usage.toFixed(2)}% used`);
-});
-
-console.log('Total System Memory:', (totalMem / 1024 / 1024).toFixed(2), 'MB');
-console.log('Memory Used by Node.js:');
-console.log(`- RSS         : ${(used.rss / 1024 / 1024).toFixed(2)} MB`);
-console.log(`- Heap Total  : ${(used.heapTotal / 1024 / 1024).toFixed(2)} MB`);
-console.log(`- Heap Used   : ${(used.heapUsed / 1024 / 1024).toFixed(2)} MB`);
-console.log(`- External    : ${(used.external / 1024 / 1024).toFixed(2)} MB`);
+const os = require('os');  
 
 
-exec('df -h /', (err, stdout, stderr) => {
-  if (err) {
-    console.error('Error:', err);
-    return;
-  }
-  console.log('Disk usage:\n' + stdout);
-});
+function getCpuUsage() {
+  const cpus = os.cpus();
+  let totalIdle = 0;
+  let totalTick = 0;
+
+  cpus.forEach((core) => {
+    for (const type in core.times) {
+      totalTick += core.times[type];
+    }
+    totalIdle += core.times.idle;
+  });
+
+  const idle = totalIdle / cpus.length;
+  const total = totalTick / cpus.length;
+
+  const usagePercent = ((1 - idle / total) * 100).toFixed(2);
+
+  console.log(`CPU Usage: ${usagePercent}%`);
+}
+
+getCpuUsage();
+
+
+const totalMemory = os.totalmem();
+const freeMemory = os.freemem();
+
+const usedMemory = totalMemory - freeMemory;
+
+const usedMemoryPercent = ((usedMemory / totalMemory) * 100).toFixed(2);
+const freeMemoryPercent = ((freeMemory / totalMemory) * 100).toFixed(2);
+
+// Convert to MB for easier reading
+const toMB = (bytes) => (bytes / 1024 / 1024).toFixed(2);
+
+console.log(`Total Memory: ${toMB(totalMemory)} MB`);
+console.log(`Used Memory: ${toMB(usedMemory)} MB (${usedMemoryPercent}%)`);
+console.log(`Free Memory: ${toMB(freeMemory)} MB (${freeMemoryPercent}%)`);
+
+
+
 
